@@ -139,8 +139,9 @@ function App() {
           );
 
 
-          const firstQuotationResponse = await Promise.allSettled(quotationPromises);
-          setQuotationResponses(firstQuotationResponse);
+          const quotationResponse = await Promise.allSettled(quotationPromises);
+          const quotationWithRejectPromises = quotationResponse.filter(element => element.status === 'fulfilled')
+          setQuotationResponses(quotationWithRejectPromises);
         }
       }
     } catch (error) {
