@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -147,7 +147,7 @@ function App() {
     }
   };
 
-  console.log(quotationResponses.length);
+  console.log(quotationResponses);
 
 
   return (
