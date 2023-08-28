@@ -131,15 +131,16 @@ function App() {
           data4?.supportedInsurers?.includes(element)
         );
 
-        console.log("Los seguros disponibles para este auto segun tu CP son: ",  availableSecure);
+        console.log("Los seguros disponibles para este auto segun tu CP son: ", availableSecure);
 
         if (availableSecure && availableSecure.length > 0) {
           const quotationPromises = await availableSecure.map(element =>
             fetchQuotations(element, carData, token, cp, fecha, gender)
           );
 
-          const quotationResults = await Promise.all(quotationPromises);
-          setQuotationResponses(quotationResults);
+
+          const firstQuotationResponse = await Promise.allSettled(quotationPromises);
+          setQuotationResponses(firstQuotationResponse);
         }
       }
     } catch (error) {
@@ -191,7 +192,7 @@ function App() {
         <input type='submit' />
       </form>
 
-        
+
 
     </div>
   );
