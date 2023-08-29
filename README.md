@@ -2,7 +2,7 @@
 
 El template con la informacion necesaria para hacer las consultas es el siguiente y todas van llenandse una por una conforme el usuario vaya introduciendo informacion:
 
- ![Demo](https://raw.githubusercontent.com/azzzako/test-guros/assets/docs1.png)
+ ![Demo](https://raw.githubusercontent.com/azzzako/test-guros/main/assets/docs1.png)
 
 
 ## Available Scripts
