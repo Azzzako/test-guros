@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'
 
 
 function App() {
@@ -8,15 +7,12 @@ function App() {
   const [value, setValue] = useState("")
   const [data2, setData2] = useState([])
   const [data3, setData3] = useState([])
-  const [data4, setData4] = useState([])
-  const [data5, setData5] = useState([])
   const [cp, setCp] = useState([])
   const [fecha, setFecha] = useState('')
   const [gender, setGender] = useState('')
-  const [dataAseg, setDataAseg] = useState([])
+  const [carData, setCarData] = useState({})
 
   const token = process.env.REACT_APP_API_TOKEN
-  console.log(token);
 
   const fetchData = async (e) => {
     try {
@@ -68,7 +64,6 @@ function App() {
   }
 
 
-  const [carData, setCarData] = useState({})
 
   const saveData = (e) => {
     setCarData(data3.filter(carro => carro.id === e.target.value)[0])
@@ -155,27 +150,30 @@ function App() {
 
 
   return (
-    <div className="App" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div className="App" style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 250 }}>
       <select name='model' id='model' onChange={fetchData}>
-        <option value=""></option>
+        <option value="">Selecciona una marca</option>
         <option value="audi">Audi</option>
         <option value="kia">KIA</option>
         <option value="ferrari">Ferrari</option>
       </select>
 
       <select onChange={fetchData2}>
+      <option value="">Selecciona una modelo</option>
         {data1.map(carro => {
           return <option key={carro.id} value={carro.id}>{carro.name}</option>
         })}
       </select>
 
       <select onChange={fetchData3}>
+      <option value="">Año de tu automovil</option>
         {data2.map(carro => {
           return <option key={carro.id} value={carro.id}>{carro.name}</option>
         })}
       </select>
 
       <select onChange={saveData}>
+      <option value="">Tu automovil es:</option>
         {data3.map((carro, index) => {
           return <option key={carro.id} value={carro.id}>{carro.description}</option>
         })}
