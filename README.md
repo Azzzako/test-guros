@@ -1,6 +1,9 @@
-# Getting Started with Create React App
+# API Test Guros
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+El template con la informacion necesaria para hacer las consultas es el siguiente y todas van llenandse una por una conforme el usuario vaya introduciendo informacion:
+
+ ![Demo](https://raw.githubusercontent.com/azzzako/test-guros/assets/docs1.png)
+
 
 ## Available Scripts
 
