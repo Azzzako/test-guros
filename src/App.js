@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function App() {
   const [data1, setData1] = useState([]);
-  const [value, setValue] = useState("")
+
   const [data2, setData2] = useState([])
   const [data3, setData3] = useState([])
   const [cp, setCp] = useState([])
@@ -23,7 +23,6 @@ function App() {
         }
       };
 
-      setValue(e.target.value);
       const response = await axios.get(`https://staging-api.guros.com/catalog/list-sub-brands?description=${e.target.value.toUpperCase()}`, config);
       setData1(response.data);
     } catch (error) {
