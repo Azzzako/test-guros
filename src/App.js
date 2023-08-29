@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css';
+import './App.css'
+
 
 function App() {
   const [data1, setData1] = useState([]);
@@ -14,7 +15,8 @@ function App() {
   const [gender, setGender] = useState('')
   const [dataAseg, setDataAseg] = useState([])
 
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21tZXJjZUNvZGUiOiJvYXNpcy1maW5hbmNpZXJvIiwicGFydG5lckNvZGUiOiJvYXNpcy1maW5hbmNpZXJvIiwicmVxdWVzdGVyUm9sZSI6ImFwaSIsImlhdCI6MTY4NzM2MDkxMCwiZXhwIjoyMDAyOTM2OTEwLCJpc3MiOiJHdXJvcyJ9.yBtNf_gQG8QiIWj-8QgJrPm2PnKu_VxBqt_g6yjuaXM';
+  const token = process.env.REACT_APP_API_TOKEN
+  console.log(token);
 
   const fetchData = async (e) => {
     try {
