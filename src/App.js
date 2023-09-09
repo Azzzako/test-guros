@@ -272,13 +272,6 @@ function App() {
           <option value="company">Soy persona Moral</option>
         </select>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 50 }}>
-            <h2>Datos del vehiculo especificos</h2>
-            <input name='vin' placeholder='Numero de serie del automovil' onChange={handleSaveDataVehicle}/>
-            <input name='engineNumber' placeholder='Numero de motor (Pais de origen)' onChange={handleSaveDataVehicle}/>
-            <input name='licensePlates' placeholder='Numero de Placas' onChange={handleSaveDataVehicle}/>
-          </div>
-
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <h1>Datos del cliente</h1>
           <input name='firstName' placeholder='Nombre(s)' onChange={handleSaveDataClient} />
@@ -294,6 +287,12 @@ function App() {
           <input type='number' placeholder='Numero' name='externalNumber' onChange={clientDirection} />
         </div>
 
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 50 }}>
+            <h2>Datos del vehiculo especificos porfavor jeje</h2> 
+            <input name='vin' placeholder='Numero de serie del automovil' onChange={handleSaveDataVehicle}/>
+            <input name='engineNumber' placeholder='Numero de motor (Pais de origen)' onChange={handleSaveDataVehicle}/>
+            <input name='licensePlates' placeholder='Numero de Placas' onChange={handleSaveDataVehicle}/>
+          </div>
 
         <label>
           <input
