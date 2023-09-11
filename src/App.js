@@ -104,6 +104,8 @@ function App() {
       },
     };
 
+    console.log('antes de cotizar', postData)
+
     console.log("Resolving promise for:", element);
     const response = await axios.post('https://staging-api.guros.com/quotation/quote', postData, config);
     console.log("Promise resolved for:", element, response.data);
@@ -143,6 +145,7 @@ function App() {
           const quotationWithRejectPromises = quotationResponse.filter(element => element.status === 'fulfilled')
           setQuotationResponses(quotationWithRejectPromises);
         }
+
         const cotizacion = {
           vehicle: {
             versionId: carData.id,
@@ -166,6 +169,9 @@ function App() {
       console.log('Error:', error);
     }
   };
+
+  
+  
 
   //Funciones segunda parte del formulario 
 
