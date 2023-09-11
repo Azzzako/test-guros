@@ -13,7 +13,7 @@ function App() {
   const [gender, setGender] = useState('')
   const [carData, setCarData] = useState({})
   const [beneficiaryType, setBeneficiaryType] = useState("individual")
-  
+
 
   const token = process.env.REACT_APP_API_TOKEN
 
@@ -139,12 +139,28 @@ function App() {
           const quotationPromises = await availableSecure.map(element =>
             fetchQuotations(element, carData, token, cp, fecha, gender)
           );
-
-
           const quotationResponse = await Promise.allSettled(quotationPromises);
           const quotationWithRejectPromises = quotationResponse.filter(element => element.status === 'fulfilled')
           setQuotationResponses(quotationWithRejectPromises);
         }
+        const cotizacion = {
+          vehicle: {
+            versionId: carData.id,
+          },
+          policy: {
+            package: 'comprehensive',
+            paymentFrequency: 'annual',
+          },
+          client: {
+            birthdate: fecha,
+            gender: gender,
+            address: {
+              postalCode: cp,
+            },
+          },
+        };
+
+        localStorage.setItem('cotizacion', JSON.stringify(cotizacion))
       }
     } catch (error) {
       console.log('Error:', error);
@@ -162,7 +178,7 @@ function App() {
       paymentFrequency: "annual",
     },
     client: {
-      
+
     },
   })
 
@@ -209,7 +225,7 @@ function App() {
   }
 
   console.log("Estos son los seguros con los que puedes asegurar tu auto: ", quotationResponses);
-  console.log("Esta es la informacion capturada que se va a mandar a GUROS: " ,dataPoliza);
+  console.log("Esta es la informacion capturada que se va a mandar a GUROS: ", dataPoliza);
 
 
   return (
@@ -272,12 +288,12 @@ function App() {
           <option value="company">Soy persona Moral</option>
         </select>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 50 }}>
-            <h2>Datos del vehiculo especificos</h2>
-            <input name='vin' placeholder='Numero de serie del automovil' onChange={handleSaveDataVehicle}/>
-            <input name='engineNumber' placeholder='Numero de motor (Pais de origen)' onChange={handleSaveDataVehicle}/>
-            <input name='licensePlates' placeholder='Numero de Placas' onChange={handleSaveDataVehicle}/>
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 50 }}>
+          <h2>Datos del vehiculo especificos</h2>
+          <input name='vin' placeholder='Numero de serie del automovil' onChange={handleSaveDataVehicle} />
+          <input name='engineNumber' placeholder='Numero de motor (Pais de origen)' onChange={handleSaveDataVehicle} />
+          <input name='licensePlates' placeholder='Numero de Placas' onChange={handleSaveDataVehicle} />
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <h1>Datos del cliente</h1>
@@ -355,12 +371,12 @@ function App() {
               />
               Beneficiario Moral
             </label>
-            <input name={beneficiaryType === "company" ? "company" : "firstName"} placeholder={beneficiaryType === "company" ? "Nombre de la Compania" : "Nombre(s)"} onChange={handleBeneficiaryData}/>
+            <input name={beneficiaryType === "company" ? "company" : "firstName"} placeholder={beneficiaryType === "company" ? "Nombre de la Compania" : "Nombre(s)"} onChange={handleBeneficiaryData} />
             {beneficiaryType === "individual"
 
               ?
               <div>
-                <input name='paternalSurname' placeholder='Apellido Paterno' onChange={handleBeneficiaryData}/>
+                <input name='paternalSurname' placeholder='Apellido Paterno' onChange={handleBeneficiaryData} />
                 <input name='maternalSurname' placeholder='Apellido Materno' onChange={handleBeneficiaryData} />
               </div>
 
