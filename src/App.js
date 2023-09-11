@@ -1,81 +1,44 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios';
 import './App.css'
+import { setCar, setSubBrand, setYear } from './redux/actions';
+import { selectCar, selectSubBrand, selectYear } from './redux/selectors';
 
 
 function App() {
-  const [data1, setData1] = useState([]);
-  const [checkedBox, setCheckedBox] = useState({ driver: false, beneficiary: false })
-  const [data2, setData2] = useState([])
-  const [data3, setData3] = useState([])
+  const dispatch = useDispatch()
+  const data1 = useSelector(selectSubBrand)
+  const data2 = useSelector(selectYear)
+  const data3 = useSelector(selectCar)
+  const [quotationResponses, setQuotationResponses] = useState([])
   const [cp, setCp] = useState([])
   const [fecha, setFecha] = useState('')
   const [gender, setGender] = useState('')
   const [carData, setCarData] = useState({})
   const [beneficiaryType, setBeneficiaryType] = useState("individual")
+  const [checkedBox, setCheckedBox] = useState({ driver: false, beneficiary: false })
 
 
   const token = process.env.REACT_APP_API_TOKEN
 
-  const fetchData = async (e) => {
-    try {
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-
-      const response = await axios.get(`https://staging-api.guros.com/catalog/list-sub-brands?description=${e.target.value.toUpperCase()}`, config);
-      setData1(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const fetchData = (e) => {
+    e.preventDefault()
+    dispatch(setSubBrand(e.target.value))
   };
 
-  const fetchData2 = async (e) => {
-    try {
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-
-      const response = await axios.get(`https://staging-api.guros.com/catalog/list-models?subBrandId=${e.target.value}`, config)
-      setData2(response.data)
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchData2 = (e) => {
+    dispatch(setYear(e.target.value))
   }
 
-  const fetchData3 = async (e) => {
-    try {
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-
-      const response = await axios.get(`https://staging-api.guros.com/catalog/list-versions?modelId=${e.target.value}`, config)
-      setData3(response.data)
-    } catch (error) {
-      console.log(error);
-    }
+  const fetchData3 = (e) => {
+    dispatch(setCar(e.target.value))
   }
-
-
 
   const saveData = (e) => {
     e.preventDefault()
     setCarData(data3.filter(carro => carro.id === e.target.value)[0])
   }
-
-
-
-  const [quotationResponses, setQuotationResponses] = useState([])
-
 
   const fetchQuotations = async (element, carData, token, cp, fecha, gender) => {
     const config = {
@@ -170,8 +133,8 @@ function App() {
     }
   };
 
-  
-  
+
+
 
   //Funciones segunda parte del formulario 
 
@@ -247,15 +210,15 @@ function App() {
         </select>
 
         <select onChange={fetchData2}>
-          <option value="">Selecciona una modelo</option>
-          {data1.map(carro => {
+          <option value="">Selecciona un modelo</option>
+          {data1?.map(carro => {
             return <option key={carro.id} value={carro.id}>{carro.name}</option>
           })}
         </select>
 
         <select onChange={fetchData3}>
           <option value="">Año de tu automovil</option>
-          {data2.map(carro => {
+          {data2?.map(carro => {
             return <option key={carro.id} value={carro.id}>{carro.name}</option>
           })}
         </select>
@@ -310,11 +273,11 @@ function App() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 50 }}>
-            <h2>Datos del vehiculo especificos porfavor jeje</h2> 
-            <input name='vin' placeholder='Numero de serie del automovil' onChange={handleSaveDataVehicle}/>
-            <input name='engineNumber' placeholder='Numero de motor (Pais de origen)' onChange={handleSaveDataVehicle}/>
-            <input name='licensePlates' placeholder='Numero de Placas' onChange={handleSaveDataVehicle}/>
-          </div>
+          <h2>Datos del vehiculo especificos porfavor jeje</h2>
+          <input name='vin' placeholder='Numero de serie del automovil' onChange={handleSaveDataVehicle} />
+          <input name='engineNumber' placeholder='Numero de motor (Pais de origen)' onChange={handleSaveDataVehicle} />
+          <input name='licensePlates' placeholder='Numero de Placas' onChange={handleSaveDataVehicle} />
+        </div>
 
         <label>
           <input
