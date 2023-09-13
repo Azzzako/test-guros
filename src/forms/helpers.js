@@ -1,53 +1,44 @@
-import SMTPClient from 'smtp'
+import emailjs from 'emailjs-com'
 
-const sendEmail = async (email) => {
+const service = process.env.REACT_APP_EMAILJS_SERVICE
+const template = process.env.REACT_APP_EMAILJS_TEMPLATE
+const key = process.env.REACT_APP_EMAILJS_PUBLIC_KEY
 
-const domain = process.env.REACT_APP_MAILGUN_DOMAIN
-const emailgun = process.env.REACT_APP_MAILGUN_EMAIL
-const key = process.env.REACT_APP_MAILGUN_KEY
-const client = new SMTPClient({
-    user: 'tu_usuario',
-    pass: 'tu_contraseña',
-    host: 'tu_servidor_smtp',
-    ssl: true,
-  });
 
-  const emailToSend = {
-    from: 'tu_correo@dominio.com',
-    to: `${email}`,
-    subject: 'Asunto del Correo',
-    body: 'Contenido del correo electrónico',
-  };
-
-  client.send(emailToSend, (result) => {
-    if (result.status === 'success') {
-      alert('Correo electrónico enviado con éxito.');
-    } else {
-      alert('Hubo un problema al enviar el correo electrónico.');
-    }
-  });
-  };
+emailjs.init(key)
 
 
 const saveToLocalStorage = (carData, fecha, gender, cp) => {
-    const cotizacion = {
-        vehicle: {
-          versionId: carData.id,
-        },
-        policy: {
-          package: 'comprehensive',
-          paymentFrequency: 'annual',
-        },
-        client: {
-          birthdate: fecha,
-          gender: gender,
-          address: {
-            postalCode: cp,
-          },
-        },
-      };
+  const cotizacion = {
+    vehicle: {
+      versionId: carData.id,
+    },
+    policy: {
+      package: 'comprehensive',
+      paymentFrequency: 'annual',
+    },
+    client: {
+      birthdate: fecha,
+      gender: gender,
+      address: {
+        postalCode: cp,
+      },
+    },
+  };
 
-      localStorage.setItem('cotizacion', JSON.stringify(cotizacion))
+  localStorage.setItem('cotizacion', JSON.stringify(cotizacion))
+}
+
+const deleteFromLocalStorage = () => {
+  localStorage.removeItem('cotizacion')
+}
+
+const sendEmail = (email, postData) => {
+  const data = {
+    to_email: email,
+    from_name: 'Oasis Financiero',
+    message: `Hola esta es una prueba, increible si funciona 2.0 ${postData}`
   }
-
-  export {sendEmail, saveToLocalStorage}
+  emailjs.send(service, template, data)
+}
+  export { saveToLocalStorage, deleteFromLocalStorage, sendEmail, emailjs }

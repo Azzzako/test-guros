@@ -13,13 +13,25 @@ const data1 = useSelector(selectSubBrand)
 const data2 = useSelector(selectYear)
 const data3 = useSelector(selectCar) 
 const [quotationResponses, setQuotationResponses] = useState([])
+const postData = {
+  vehicle: {
+    versionId: carData.id,
+  },
+  policy: {
+    package: 'comprehensive',
+    paymentFrequency: 'annual',
+  },
+  client: {
+    birthdate: fecha,
+    gender: gender,
+    address: {
+      postalCode: cp,
+    },
+  },
+};
 
 
 const token = process.env.REACT_APP_API_TOKEN
-const domain = process.env.REACT_APP_MAILGUN_DOMAIN
-const emailgun = process.env.REACT_APP_MAILGUN_EMAIL
-const key = process.env.REACT_APP_MAILGUN_KEY
-console.log(domain,emailgun, key);
 
   const fetchData = (e) => {
     e.preventDefault()
@@ -49,25 +61,6 @@ console.log(domain,emailgun, key);
       },
     };
 
-    const postData = {
-      vehicle: {
-        versionId: carData.id,
-      },
-      policy: {
-        package: 'comprehensive',
-        paymentFrequency: 'annual',
-      },
-      client: {
-        birthdate: fecha,
-        gender: gender,
-        address: {
-          postalCode: cp,
-        },
-      },
-    };
-
-    console.log('antes de cotizar', postData)
-
     console.log("Resolving promise for:", element);
     const response = await axios.post('https://staging-api.guros.com/quotation/quote', postData, config);
     console.log("Promise resolved for:", element, response.data);
@@ -86,11 +79,11 @@ console.log(domain,emailgun, key);
         },
       };
 
-      const postData = {
+      const postalVerify = {
         postalCode: cp,
       };
 
-      const response = await axios.post('https://staging-api.guros.com/catalog/verify-neighborhoods', postData, config);
+      const response = await axios.post('https://staging-api.guros.com/catalog/verify-neighborhoods', postalVerify, config);
       const data4 = response.data;
 
       if (data4.exists) {
@@ -105,10 +98,10 @@ console.log(domain,emailgun, key);
             fetchQuotations(element, carData, token, cp, fecha, gender)
           );
           const quotationResponse = await Promise.allSettled(quotationPromises);
-          const quotationWithRejectPromises = quotationResponse.filter(element => element.status === 'fulfilled')
-          setQuotationResponses(quotationWithRejectPromises);
+          const quotationFulfilled = quotationResponse.filter(element => element.status === 'fulfilled')
+          setQuotationResponses(quotationFulfilled);
           saveToLocalStorage(carData, fecha, gender, cp)
-          await sendEmail(email)
+          sendEmail(email, postData)
         }
 
       }
