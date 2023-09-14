@@ -3,35 +3,37 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios';
 import { setCar, setSubBrand, setYear } from '../redux/actions';
 import { selectCar, selectSubBrand, selectYear } from '../redux/selectors/index';
-import {sendEmail, saveToLocalStorage} from './helpers';
+import { sendEmail, saveToLocalStorage } from './helpers';
+import Cards from '../cards/Cards';
 
 
-const Cotization = ({carData, setCarData, fecha, setFecha, cp, setCp, gender, setGender, email, setEmail}) => {
+const Cotization = ({ carData, setCarData, fecha, setFecha, cp, setCp, gender, setGender, email, setEmail }) => {
 
-const dispatch = useDispatch()
-const data1 = useSelector(selectSubBrand)
-const data2 = useSelector(selectYear)
-const data3 = useSelector(selectCar) 
-const [quotationResponses, setQuotationResponses] = useState([])
-const postData = {
-  vehicle: {
-    versionId: carData.id,
-  },
-  policy: {
-    package: 'comprehensive',
-    paymentFrequency: 'annual',
-  },
-  client: {
-    birthdate: fecha,
-    gender: gender,
-    address: {
-      postalCode: cp,
+  const dispatch = useDispatch()
+  const data1 = useSelector(selectSubBrand)
+  const [loader, setLoader] = useState(false)
+  const data2 = useSelector(selectYear)
+  const data3 = useSelector(selectCar)
+  const [quotationResponses, setQuotationResponses] = useState([])
+  const postData = {
+    vehicle: {
+      versionId: carData.id,
     },
-  },
-};
+    policy: {
+      package: 'comprehensive',
+      paymentFrequency: 'annual',
+    },
+    client: {
+      birthdate: fecha,
+      gender: gender,
+      address: {
+        postalCode: cp,
+      },
+    },
+  };
 
 
-const token = process.env.REACT_APP_API_TOKEN
+  const token = process.env.REACT_APP_API_TOKEN
 
   const fetchData = (e) => {
     e.preventDefault()
@@ -64,7 +66,10 @@ const token = process.env.REACT_APP_API_TOKEN
     console.log("Resolving promise for:", element);
     const response = await axios.post('https://staging-api.guros.com/quotation/quote', postData, config);
     console.log("Promise resolved for:", element, response.data);
-    return response.data;
+    return {
+      element: element,
+      response: response.data
+    };
   };
 
 
@@ -97,11 +102,13 @@ const token = process.env.REACT_APP_API_TOKEN
           const quotationPromises = await availableSecure.map(element =>
             fetchQuotations(element, carData, token, cp, fecha, gender)
           );
+          setLoader(true)
           const quotationResponse = await Promise.allSettled(quotationPromises);
           const quotationFulfilled = quotationResponse.filter(element => element.status === 'fulfilled')
           setQuotationResponses(quotationFulfilled);
-          saveToLocalStorage(carData, fecha, gender, cp)
-          sendEmail(email, postData)
+          setLoader(false)
+          // saveToLocalStorage(carData, fecha, gender, cp)
+          // sendEmail(email, postData)
         }
 
       }
@@ -112,9 +119,11 @@ const token = process.env.REACT_APP_API_TOKEN
 
   console.log("Estos son los seguros con los que puedes asegurar tu auto: ", quotationResponses);
 
-return(
-    
+  return (
+
     <div className="App" style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 50 }}>
+    
+      
       <h1>Primera Parte de la cotizacion</h1>
       <h3>Recopilamos los datos del automovil y del interesado</h3>
       <select name='model' id='model' onChange={fetchData}>
@@ -148,7 +157,7 @@ return(
 
       <form style={{ display: 'flex', flexDirection: 'column', padding: 50 }} onSubmit={fetchData4}>
         <label htmlFor='emailAdress'>Email</label>
-      <input name='emailAdress' placeholder='Correo Electronico' onChange={(e) => setEmail(e.target.value)}/>
+        <input name='emailAdress' placeholder='Correo Electronico' onChange={(e) => setEmail(e.target.value)} />
         <label htmlFor='cp'>Codigo Postal: </label>
         <input type='number' id='cp' onChange={(e) => setCp(e.target.value)} />
         <label htmlFor='fecha'>Fecha: </label>
@@ -162,11 +171,27 @@ return(
         <input type='submit' />
       </form>
 
+      {loader ? <h1>Estamos realizando la cotizacion, gracias por esperar</h1> : null}
+      <div style={{display: 'flex', flexDirection: 'row', gap: 5, justifyContent: 'space-around'}}>
+        {quotationResponses.length > 0 ?
+          quotationResponses.map(element => {
+            return <Cards
+              key={element.value.response.cartId}
+              name={element.value.element}
+              price={element.value.response.costs}
+            />
+          })
 
+          :
+
+          null
+        }
+
+      </div>
 
     </div>
 
-    )
+  )
 }
 
 export default Cotization
