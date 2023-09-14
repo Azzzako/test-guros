@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios';
 import { setCar, setSubBrand, setYear } from '../redux/actions';
 import { selectCar, selectSubBrand, selectYear } from '../redux/selectors/index';
-import { sendEmail, saveToLocalStorage } from './helpers';
+// import { sendEmail, saveToLocalStorage } from './helpers';
 import Cards from '../cards/Cards';
 
 
