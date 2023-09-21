@@ -45,15 +45,15 @@ const sendEmail = (email, info) => {
     return encrypted.toString();
   }
 
-  
+
 
   // Ciframos los datos sensibles
   const encryptedEmail = encryptData(info.client.emailAddress, secretKey);
   const encryptedPostalCode = encryptData(info.client.postalCode, secretKey);
   const encryptedBirthdate = encryptData(info.client.birthdate, secretKey);
-
+  const encryptedBrnadId = encryptData(info.vehicle.brandId, secretKey)
   // Construimos los parámetros de la URL cifrando los datos
-  const params = `http://localhost:3000/form?vehicle=${encodeURIComponent(info.vehicle.subBrand)}&year=${info.vehicle.year}&email=${encodeURIComponent(encryptedEmail)}&postalCode=${encodeURIComponent(encryptedPostalCode)}&birthdate=${encodeURIComponent(encryptedBirthdate)}`;
+  const params = `http://localhost:3000/form?brand=${encodeURIComponent(encryptedBrnadId)}&vehicle=${encodeURIComponent(info.vehicle.subBrand)}&year=${info.vehicle.year}&email=${encodeURIComponent(encryptedEmail)}&postalCode=${encodeURIComponent(encryptedPostalCode)}&birthdate=${encodeURIComponent(encryptedBirthdate)}`;
 
   // Construimos el mensaje de correo electrónico con el enlace
   const message = `
